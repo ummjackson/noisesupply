@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>NOISESUPPLY</title>
+  <meta name="description" content="Pandora for SoundCloud">
+  <meta name="author" content="http://ummjackson.com">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+  <style>
+  .heading {
+    background-color: #000;
+    color: #FFF;
+    margin-top: 2rem;
+  }
+  .player {
+    font-size: 72px;
+    margin-bottom: 1rem;
+  }
+  </style>
+
+
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row">
+      <div class="two-thirds column">
+        
+        <h1 class="heading">NOISESUPPLY</h1>
+
+        <i class="fa fa-circle-o-notch fa-spin player"></i>
+
+        <h5><a href="#" class="title"></a> <em>by</em> <a href="#" class="user"></a></h5>
+
+    </div>
+  </div>
+
+
+
+  <script src="soundcloud-audio.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.6/zepto.min.js"></script>
+  <script>
+
+// Create instance with token
+var player = new SoundCloudAudio('b386da1a67a067584cac1747c49ef3d7');
+
+// Button icon changing
+player.on('waiting', function(audio) {
+    $('.player').removeClass('fa-pause fa-play');
+    $('.player').addClass('fa-circle-o-notch fa-spin');
+});
+
+player.on('pause', function(audio) {
+    $('.player').removeClass('fa-pause fa-circle-o-notch fa-spin');
+    $('.player').addClass('fa-play');
+});
+
+player.on('playing', function(audio) {
+    $('.player').removeClass('fa-play fa-circle-o-notch fa-spin');
+    $('.player').addClass('fa-pause');
+});
+
+// Button click handling
+$('.player').on('click', function(e) {
+    if (!player.playing) {
+        player.play();
+    } else {
+        player.pause();
+    }
+});
+
+// Keyboard handling handling
+$(window).keydown(function(e) {
+    // Spacebar
+    if (e.which === 32) {
+        if (!player.playing) {
+            player.play();
+        } else {
+            player.pause();
+        }
+    }
+    else if (e.which === 39) {
+      playNext();
+    }
+});
+
+function loadSuggestions(id) {
+
+  // Grab suggestions
+  $.getJSON('https://api.soundcloud.com/tracks/' + id + '/related?limit=25', function(data){
+
+    tracks = [];
+
+    // Loop through and add to array
+    data.forEach(function(track) {
+
+      // Make sure track is streamable
+      if (track.stream_url) {
+        tracks.push(track.permalink_url);
+      }
+
+    });
+
+    // Grab playlist from localStorage
+    if (localStorage['playlist']) {
+
+      playlist = JSON.parse(localStorage['playlist']);
+
+      // Concat new tracks and resubmit to localStorage
+      localStorage['playlist'] = JSON.stringify(playlist.concat(tracks));
+
+    }
+    
+    else { 
+      localStorage['playlist'] = JSON.stringify(tracks); 
+    }
+
+}); 
+
+}
+
+function playTrack(url) {
+    // Resolve track metadata
+    player.resolve(url, function(track) {
+        $('.title').attr('href', track.permalink_url).text(track.title);
+        $('.user').attr('href', track.user.permalink_url).text(track.user.username);
+
+        // Play once loaded
+        player.play();    
+
+        // Load suggestions into playlist
+        loadSuggestions(track.id);
+    });
+
+}
+
+function playNext() {
+  // Load the playlist, grab the first record's URL then remove it from the playlist
+  playlist = JSON.parse(localStorage['playlist']);
+  url = playlist[0];
+  playlist.shift();
+  localStorage['playlist'] = JSON.stringify(playlist);
+
+  // Play the track
+  playTrack(url);
+}
+
+// Grab next song and start playing on song end
+player.on('ended', function(audio) {
+ playNext();  
+});
+
+/* 
+
+-- Initalize script
+localStorage.clear();
+playTrack('https://soundcloud.com/yukinoame/shizumeru');
+
+-- Check playlist script
+console.log(JSON.parse(localStorage['playlist']));
+
+*/
+
+</script>
+
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>
