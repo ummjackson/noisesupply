@@ -37,6 +37,9 @@
     font-size: 72px;
     margin-bottom: 1rem;
   }
+  .play-area {
+    display: none;
+  }
   </style>
 
 
@@ -51,9 +54,18 @@
         
         <h1 class="heading">NOISESUPPLY</h1>
 
-        <i class="fa fa-circle-o-notch fa-spin player"></i>
+        <div class="pick-area">
+          <form name="track-input" id="track-input">
+            <label for="track-url">Enter a SoundCloud URL</label>
+            <input class="u-full-width" type="url" required="required" placeholder="soundcloud.com/cool-artist/amazing-song" id="track-url">
+            <input class="button" type="submit" value="Make some noise">         
+          </form>
+        </div>
 
-        <h5><a href="#" class="title"></a> <em>by</em> <a href="#" class="user"></a></h5>
+        <div class="play-area">
+          <i class="fa fa-circle-o-notch fa-spin player"></i>
+          <h5><a href="#" class="title"></a> <em>by</em> <a href="#" class="user"></a></h5>
+        </div>
 
     </div>
   </div>
@@ -83,13 +95,31 @@ player.on('playing', function(audio) {
     $('.player').addClass('fa-pause');
 });
 
-// Button click handling
+// Play / pause button click handling
 $('.player').on('click', function(e) {
     if (!player.playing) {
         player.play();
     } else {
         player.pause();
     }
+});
+
+// Submit button click handling
+$('#track-input').on('submit', function(e) {
+    e.preventDefault();
+
+    url = $('#track-url').val();
+
+    player.resolve(url, function(track) {
+      if (track.stream_url) {
+        $('#track-url').val('');
+        $('.pick-area').hide();
+        $('.play-area').show();
+        localStorage.clear();
+        playTrack(track.permalink_url);
+      }
+    });
+
 });
 
 // Keyboard handling handling
