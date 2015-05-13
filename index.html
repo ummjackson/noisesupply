@@ -112,31 +112,36 @@ function loadSuggestions(id) {
   // Grab suggestions
   $.getJSON('https://api.soundcloud.com/tracks/' + id + '/related?limit=25', function(data){
 
+    // Get playlist
+    if (localStorage['playlist']) {
+    playlist = JSON.parse(localStorage['playlist']);
+    }
+
+    else {
+      playlist = [];
+    }
+
+    // Get play history
+    playhistory = JSON.parse(localStorage['history']);
+
+    // Empty tracks array
     tracks = [];
 
     // Loop through and add to array
     data.forEach(function(track) {
 
-      // Make sure track is streamable
-      if (track.stream_url) {
+      // Make sure we're using HTTPS for everything
+      track.permalink_url = track.permalink_url.replace(/^http:\/\//i, 'https://');
+
+      // Make sure track is streamable, not already in playlist or history
+      if (track.stream_url && playlist.indexOf(track.permalink_url) < 0 && playhistory.indexOf(track.permalink_url) < 0) {
         tracks.push(track.permalink_url);
       }
 
     });
 
-    // Grab playlist from localStorage
-    if (localStorage['playlist']) {
-
-      playlist = JSON.parse(localStorage['playlist']);
-
-      // Concat new tracks and resubmit to localStorage
-      localStorage['playlist'] = JSON.stringify(playlist.concat(tracks));
-
-    }
-    
-    else { 
-      localStorage['playlist'] = JSON.stringify(tracks); 
-    }
+    // Concat new tracks and resubmit to localStorage
+    localStorage['playlist'] = JSON.stringify(playlist.concat(tracks));
 
 }); 
 
@@ -145,11 +150,29 @@ function loadSuggestions(id) {
 function playTrack(url) {
     // Resolve track metadata
     player.resolve(url, function(track) {
+
+        // Make sure we're using HTTPS for everything
+        track.permalink_url = track.permalink_url.replace(/^http:\/\//i, 'https://');
+
+        // Update UI
         $('.title').attr('href', track.permalink_url).text(track.title);
         $('.user').attr('href', track.user.permalink_url).text(track.user.username);
 
         // Play once loaded
-        player.play();    
+        player.play();
+
+        // Add to player history
+        if (localStorage['history']) {
+          playhistory = JSON.parse(localStorage['history']);
+          playhistory.push(track.permalink_url);
+          localStorage['history'] = JSON.stringify(playhistory);
+        }
+
+        else {
+          playhistory = [];
+          playhistory.push(track.permalink_url);
+          localStorage['history'] = JSON.stringify(playhistory);
+        }
 
         // Load suggestions into playlist
         loadSuggestions(track.id);
@@ -158,9 +181,13 @@ function playTrack(url) {
 }
 
 function playNext() {
-  // Load the playlist, grab the first record's URL then remove it from the playlist
+  // Load the playlist from localStorage
   playlist = JSON.parse(localStorage['playlist']);
+
+  // Grab the track to play
   url = playlist[0];
+
+  // Remove the first track and save back to localStorage
   playlist.shift();
   localStorage['playlist'] = JSON.stringify(playlist);
 
