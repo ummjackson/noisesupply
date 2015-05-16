@@ -57,6 +57,9 @@
   .fa-soundcloud:hover {
     color: #e67e22;
   }
+  .tips {
+    display: none;
+  }
   </style>
 
 
@@ -83,9 +86,14 @@
           <i class="fa fa-circle-o-notch fa-spin player"></i>
           <h5><a href="#" class="title"></a> <em>by</em> <a href="#" class="user"></a></h5>
         </div>
+    </div>
 
-
-
+    <div class="one-third column">
+<pre class="tips"><code><u>Hot tips</u>
+- Spacebar to pause
+- Right arrow to skip track
+<a href="javascript:document.cookie = 'tips'; $('.tips').hide();">[Close]</a>
+</code></pre>
     </div>
   </div>
 
@@ -129,19 +137,27 @@ $('.player').on('click', function(e) {
 // Submit button click handling
 $('#track-input').on('submit', function(e) {
     e.preventDefault();
-
     url = $('#track-url').val();
-
-    player.resolve(url, function(track) {
-      if (track.stream_url) {
-        $('#track-url').val('');
-        $('.pick-area').hide();
-        $('.play-area').show();
-        localStorage.clear();
-        playTrack(track.permalink_url);
-      }
-    });
+    trackPlay(url);
 });
+
+// Go to play screen
+function trackPlay(url) {
+    player.resolve(url, function(track) {
+    if (track.stream_url) {
+      $('#track-url').val('');
+      $('.pick-area').hide();
+      $('.play-area').show();
+      localStorage.clear();
+      playTrack(track.permalink_url);
+
+        if (document.cookie != 'tips') {
+          $('.tips').show();
+        }
+
+    }
+  });
+}
 
 // Back to select track
 function trackSelect() {
@@ -266,6 +282,18 @@ player.on('error', function(audio) {
   } catch (e) {
       alert("We're having trouble streaming that track... please try a different one");
       trackSelect();
+  }
+});
+
+// Page load business
+Zepto(function($){
+
+  // Hash handling
+  if(window.location.hash) {
+    url = window.location.hash.split('#')[1];
+    trackPlay(url);
+  } else {
+    trackSelect();
   }
 });
 
