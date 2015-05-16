@@ -40,6 +40,23 @@
   .play-area {
     display: none;
   }
+  .credits {
+    color: #999;
+    font-size: 12px;
+    position: fixed;
+    bottom: 12px;
+    right: 12px;
+    cursor: pointer;
+  }
+  .credits a {
+    color: #999;
+  }
+  .fa-heart:hover {
+    color: #e74c3c;
+  }
+  .fa-soundcloud:hover {
+    color: #e67e22;
+  }
   </style>
 
 
@@ -67,9 +84,14 @@
           <h5><a href="#" class="title"></a> <em>by</em> <a href="#" class="user"></a></h5>
         </div>
 
+
+
     </div>
   </div>
 
+  <div class="credits">
+  created with <a href="http://ummjackson.com/"><i class="fa fa-heart"></i></a> by jackson. powered by <a href-"https://soundcloud.com/"><i class="fa fa-soundcloud"></i></a>
+  </div>
 
 
   <script src="soundcloud-audio.min.js"></script>
@@ -119,8 +141,14 @@ $('#track-input').on('submit', function(e) {
         playTrack(track.permalink_url);
       }
     });
-
 });
+
+// Back to select track
+function trackSelect() {
+  player.pause();
+  $('.pick-area').show();
+  $('.play-area').hide();
+}
 
 // Keyboard handling handling
 $(window).keydown(function(e) {
@@ -206,6 +234,7 @@ function playTrack(url) {
 
         // Load suggestions into playlist
         loadSuggestions(track.id);
+
     });
 
 }
@@ -227,10 +256,20 @@ function playNext() {
 
 // Grab next song and start playing on song end
 player.on('ended', function(audio) {
- playNext();  
+    playNext();  
 });
 
-/* 
+// Error handling
+player.on('error', function(audio) {
+  try {
+      playNext(); 
+  } catch (e) {
+      alert("We're having trouble streaming that track... please try a different one");
+      trackSelect();
+  }
+});
+
+/* For testing
 
 -- Initalize script
 localStorage.clear();
