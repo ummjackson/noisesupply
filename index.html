@@ -32,6 +32,7 @@
   .player {
     font-size: 72px;
     margin-bottom: 1rem;
+    cursor: pointer;
   }
   .play-area {
     display: none;
@@ -55,6 +56,48 @@
   }
   .tips {
     display: none;
+  }
+  .social a {
+    font-size: 24px;
+    color: #999;
+    vertical-align: middle;
+  }
+  .social a:hover {
+    color: #FFF;
+  }
+  .social span {
+    font-size: 12px;
+    color: #999;
+    font-family: monospace;
+    padding-left: 12px;
+    display: none;
+  }
+  .fa-facebook:hover { 
+    border-color: #3b5998;
+    background-color: #3b5998;
+  }
+  .fa-tumblr:hover {
+    border-color: #32506d;
+    background-color: #32506d;
+  }
+  .fa-twitter:hover {
+    border-color: #00aced;
+    background-color: #00aced;
+  }
+  .fa-link:hover {
+    border-color: #049fb3;
+    background-color: #049fb3;
+  }
+  .fa-border {
+    border: solid 1px #E1E1E1;
+    border-radius: 4px;
+  }
+  .fa-fw {
+    height: 1.28571429em;
+    line-height: 30px;
+  }
+  hr {
+    margin-bottom: 3rem;
   }
   </style>
 
@@ -81,6 +124,18 @@
         <div class="play-area">
           <i class="fa fa-circle-o-notch fa-spin player"></i>
           <h5><a href="#" class="title"></a> <em>by</em> <a href="#" class="user"></a></h5>
+          
+          <hr>
+
+          <div class="social">
+          <label>Share this station</label>
+          <a class="facebook" target="_blank" href=""><i class="fa fa-fw fa-border fa-facebook"></i></a>
+          <a class="twitter" target="_blank" href=""><i class="fa fa-fw fa-border fa-twitter"></i></a>
+          <a class="tumblr" target="_blank" href=""><i class="fa fa-fw fa-border fa-tumblr"></i></a>
+          <a class="link" href="javascript:$('.social span').toggle();"><i class="fa fa-fw fa-border fa-link"></i></a>
+          <span>Copy / paste the link from the address bar to share :)</span>
+         </div>
+
         </div>
     </div>
 
@@ -145,6 +200,8 @@ function trackPlay(url) {
       $('.pick-area').hide();
       $('.play-area').show();
       localStorage.clear();
+      window.location.hash = track.permalink_url;
+      updateSocial(window.location.origin + '#' + track.permalink_url);
       playTrack(track.permalink_url);
 
         if (document.cookie != 'tips') {
@@ -281,8 +338,21 @@ player.on('error', function(audio) {
   }
 });
 
+function updateSocial(url) {
+
+  $('.twitter').attr('href', 'https://twitter.com/intent/tweet?text=Currently listening on @noisedotsuppply :: ' + url);
+  $('.facebook').attr('href', 'https://www.facebook.com/sharer/sharer.php?u=' + url);
+  $('.tumblr').attr('href','http://www.tumblr.com/share/link?url=' + url + '&description=Currently listening on noise.supply');
+
+}
+
 // Page load business
 Zepto(function($){
+
+  // IE origin workaround
+  if (!window.location.origin) {
+    window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
+  }
 
   // Hash handling
   if(window.location.hash) {
