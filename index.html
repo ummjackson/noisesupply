@@ -212,7 +212,7 @@ function trackPlay(url) {
       updateSocial(window.location.origin + '/#' + track.permalink_url);
       playTrack(track.permalink_url);
 
-        if (document.cookie != 'tips') {
+        if (document.cookie.indexOf('tips') < 0) {
           $('.tips').show();
         }
 
