@@ -200,8 +200,8 @@ function trackPlay(url) {
       $('.pick-area').hide();
       $('.play-area').show();
       localStorage.clear();
-      window.location.hash = track.permalink_url;
-      updateSocial(window.location.origin + '#' + track.permalink_url);
+      window.location.hash = '#' + track.permalink_url;
+      updateSocial(window.location.origin + '/#' + track.permalink_url);
       playTrack(track.permalink_url);
 
         if (document.cookie != 'tips') {
