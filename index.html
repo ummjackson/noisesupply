@@ -261,6 +261,16 @@ player.on('playing', function(audio) {
     $('.player').addClass('fa-pause');
 });
 
+// Error handling
+player.on('error', function(audio) {
+  try {
+      playNext(); 
+  } catch (e) {
+      alert("We're having trouble streaming that track... please try a different one");
+      trackSelect();
+  }
+});
+
 // Play / pause button click handling
 $('.player').on('click', function(e) {
     if (!player.playing) {
@@ -420,16 +430,6 @@ function playNext() {
 // Grab next song and start playing on song end
 player.on('ended', function(audio) {
     playNext();  
-});
-
-// Error handling
-player.on('error', function(audio) {
-  try {
-      playNext(); 
-  } catch (e) {
-      alert("We're having trouble streaming that track... please try a different one");
-      trackSelect();
-  }
 });
 
 function updateSocial(url) {
