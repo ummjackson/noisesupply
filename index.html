@@ -99,6 +99,24 @@
   hr {
     margin-bottom: 3rem;
   }
+  .genres span {
+    text-transform: uppercase;
+    font-style: italic;
+    padding-right: 12px;
+    color: #D1D1D1;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .genres span:hover {
+    color: #FFF;
+    background-color: #000;
+  }
+  .genre-loading {
+    display: none;
+  }
+  .selected-genre {
+    text-transform: uppercase;
+  }
   </style>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -127,6 +145,51 @@
             <input class="u-full-width" type="url" required="required" placeholder="soundcloud.com/cool-artist/amazing-song" id="track-url">
             <input class="button" type="submit" value="Make some noise">         
           </form>
+
+          <hr>
+
+          <label for="track-url">...or pick a genre:</label>
+
+          <div class="genres">
+            <span>Alternative Rock</span>
+            <span>Ambient</span>
+            <span>Chill</span>
+            <span>Classical</span>
+            <span>Country</span>
+            <span>Dance & EDM</span>
+            <span>Dancehall</span>
+            <span>Deep House</span>
+            <span>Disco</span>
+            <span>Drum & Bass</span>
+            <span>Dubstep</span>
+            <span>Electronic</span>
+            <span>Folk & Singer-Songwriter</span>
+            <span>Glo-Fi</span>
+            <span>Hip Hop & Rap</span>
+            <span>House</span>
+            <span>Indie</span>
+            <span>Jazz & Blues</span>
+            <span>Latin</span>
+            <span>Metal</span>
+            <span>Piano</span>
+            <span>Pop</span>
+            <span>R&B & Soul</span>
+            <span>Reggae</span>
+            <span>Reggaeton</span>
+            <span>Rock</span>
+            <span>Soundtrack</span>
+            <span>Techno</span>
+            <span>Trance</span>
+            <span>Trap</span>
+            <span>Trip Hop</span>
+            <span>World</span>
+            <span>Vaporwave</span>
+          </div>
+
+          <div class="genre-loading">
+            <i class="fa fa-circle-o-notch fa-spin"></i> <em><strong>Loading <span class="selected-genre"></span> station...</strong></em>
+          </div>
+
         </div>
 
         <div class="play-area">
@@ -198,6 +261,15 @@ $('#track-input').on('submit', function(e) {
     e.preventDefault();
     url = $('#track-url').val();
     trackPlay(url);
+});
+
+// Genre clicking
+$('.genres > span').on('click', function(e) {
+    $('.selected-genre').text($(this).text());
+    $('.genres').hide();
+    $('.genre-loading').show();
+    var genre = escape($(this).text().replace(/ /g, '+'));
+    loadGenre(genre);
 });
 
 // Go to play screen
@@ -354,6 +426,38 @@ function updateSocial(url) {
 
 }
 
+// Helper function: Fisher-Yates shuffle algorithm
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+
+// Load genre
+function loadGenre(genre) {
+
+// Get the top tracks for the genre
+$.getJSON('https://api.soundcloud.com/tracks?tags=' + genre + '&limit=100&client_id=b386da1a67a067584cac1747c49ef3d7', function(data){
+
+  // Sort by favorites
+  data.sort(function(a, b) {
+    return b.playback_count - a.playback_count;
+  });
+
+  // Get first 10 items
+  data.splice(10, data.length - 10);
+  shuffleArray(data);
+
+  // Play the first suggestion
+  trackPlay(data[0].permalink_url);
+});
+
+}
+
 // Page load business
 Zepto(function($){
 
@@ -369,6 +473,7 @@ Zepto(function($){
   } else {
     trackSelect();
   }
+
 });
 
 /* For testing
