@@ -35,11 +35,11 @@ input[type="submit"]:hover {
 }
 
 .fa-heart:hover {
-  color: #e74c3c;
+  color: #E74C3C;
 }
 
 .fa-soundcloud:hover {
-  color: #e67e22;
+  color: #E67E22;
 }
 
 .tips {
@@ -65,23 +65,23 @@ input[type="submit"]:hover {
 }
 
 .fa-facebook:hover {
-  border-color: #3b5998;
-  background-color: #3b5998;
+  border-color: #3B5998;
+  background-color: #3B5998;
 }
 
 .fa-tumblr:hover {
-  border-color: #32506d;
-  background-color: #32506d;
+  border-color: #32506D;
+  background-color: #32506D;
 }
 
 .fa-twitter:hover {
-  border-color: #00aced;
-  background-color: #00aced;
+  border-color: #00ACED;
+  background-color: #00ACED;
 }
 
 .fa-link:hover {
-  border-color: #049fb3;
-  background-color: #049fb3;
+  border-color: #049FB3;
+  background-color: #049FB3;
 }
 
 .fa-border {
