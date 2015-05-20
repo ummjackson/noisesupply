@@ -44,6 +44,7 @@
     bottom: 12px;
     right: 12px;
     cursor: pointer;
+    background-color: #FFF;
   }
   .credits a {
     color: #999;
@@ -243,6 +244,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.6/zepto.min.js"></script>
   <script>
 
+// Load everything...
+Zepto(function($){
+
 // Create instance with token
 var player = new SoundCloudAudio('b386da1a67a067584cac1747c49ef3d7');
 
@@ -386,13 +390,6 @@ function playTrack(url) {
         // Make sure we're using HTTPS for everything
         track.permalink_url = track.permalink_url.replace(/^http:\/\//i, 'https://');
 
-        // Update UI
-        $('.title').attr('href', track.permalink_url).text(track.title);
-        $('.user').attr('href', track.user.permalink_url).text(track.user.username);
-
-        // Play once loaded
-        player.play();
-
         // Add to player history
         if (localStorage['history']) {
           playhistory = JSON.parse(localStorage['history']);
@@ -406,7 +403,29 @@ function playTrack(url) {
           localStorage['history'] = JSON.stringify(playhistory);
         }
 
-        // Load suggestions into playlist
+        // Get around SounCloud saying stuff is streamable when it's not by using an undocumented API endpoint...
+        $.getJSON('https://api.soundcloud.com/tracks/' + track.id + '/streams?client_id=b386da1a67a067584cac1747c49ef3d7',
+          function(data) {
+
+            // HTTP accessible stream exists
+            if (data.http_mp3_128_url) {
+
+              // Update UI
+              $('.title').attr('href', track.permalink_url).text(track.title);
+              $('.user').attr('href', track.user.permalink_url).text(track.user.username);
+
+              // Play the track
+              player.play();
+            }
+
+            // SoundCloud lied, it's not streamable, play the next song
+            else {
+              playNext();
+            }
+
+          });
+
+        // Load suggestions into playlist (even if the track didn't stream, because there could still be recommendations)
         loadSuggestions(track.id);
 
     });
@@ -455,26 +474,23 @@ function shuffleArray(array) {
 // Load genre
 function loadGenre(genre) {
 
-// Get the top tracks for the genre
-$.getJSON('https://api.soundcloud.com/tracks?tags=' + genre + '&limit=100&client_id=b386da1a67a067584cac1747c49ef3d7', function(data){
+  // Get the top tracks for the genre
+  $.getJSON('https://api.soundcloud.com/tracks?tags=' + genre + '&limit=100&client_id=b386da1a67a067584cac1747c49ef3d7', function(data){
 
-  // Sort by favorites
-  data.sort(function(a, b) {
-    return b.playback_count - a.playback_count;
+    // Sort by favorites
+    data.sort(function(a, b) {
+      return b.playback_count - a.playback_count;
+    });
+
+    // Get first 10 items
+    data.splice(10, data.length - 10);
+    shuffleArray(data);
+
+    // Play the first suggestion
+    trackPlay(data[0].permalink_url);
   });
 
-  // Get first 10 items
-  data.splice(10, data.length - 10);
-  shuffleArray(data);
-
-  // Play the first suggestion
-  trackPlay(data[0].permalink_url);
-});
-
 }
-
-// Page load business
-Zepto(function($){
 
   // IE origin workaround
   if (!window.location.origin) {
