@@ -5,7 +5,7 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>NOISESUPPLY</title>
+  <title>NOISESUPPLY - Pandora for SoundCloud</title>
   <meta name="description" content="Pandora for SoundCloud">
   <meta name="author" content="http://ummjackson.com">
 
@@ -17,108 +17,13 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="icon" type="image/png" href="images/favicon.png">
 
-  <style>
-  .heading {
-    background-color: #000;
-    color: #FFF;
-    margin-top: 2rem;
-  }
-  .player {
-    font-size: 72px;
-    margin-bottom: 1rem;
-    cursor: pointer;
-  }
-  .play-area {
-    display: none;
-  }
-  .credits {
-    color: #999;
-    font-size: 12px;
-    position: fixed;
-    bottom: 12px;
-    right: 12px;
-    cursor: pointer;
-    background-color: #FFF;
-  }
-  .credits a {
-    color: #999;
-  }
-  .fa-heart:hover {
-    color: #e74c3c;
-  }
-  .fa-soundcloud:hover {
-    color: #e67e22;
-  }
-  .tips {
-    display: none;
-  }
-  .social a {
-    font-size: 24px;
-    color: #999;
-    vertical-align: middle;
-  }
-  .social a:hover {
-    color: #FFF;
-  }
-  .social span {
-    font-size: 12px;
-    color: #999;
-    font-family: monospace;
-    padding-left: 12px;
-    display: none;
-  }
-  .fa-facebook:hover { 
-    border-color: #3b5998;
-    background-color: #3b5998;
-  }
-  .fa-tumblr:hover {
-    border-color: #32506d;
-    background-color: #32506d;
-  }
-  .fa-twitter:hover {
-    border-color: #00aced;
-    background-color: #00aced;
-  }
-  .fa-link:hover {
-    border-color: #049fb3;
-    background-color: #049fb3;
-  }
-  .fa-border {
-    border: solid 1px #E1E1E1;
-    border-radius: 4px;
-  }
-  .fa-fw {
-    height: 1.28571429em;
-    line-height: 30px;
-  }
-  hr {
-    margin-bottom: 3rem;
-  }
-  .genres span {
-    text-transform: uppercase;
-    font-style: italic;
-    padding-right: 12px;
-    color: #D1D1D1;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  .genres span:hover {
-    color: #FFF;
-    background-color: #000;
-  }
-  .genre-loading {
-    display: none;
-  }
-  .selected-genre {
-    text-transform: uppercase;
-  }
-  </style>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -137,14 +42,14 @@
   <div class="container">
     <div class="row">
       <div class="two-thirds column">
-        
+
         <h1 class="heading">NOISESUPPLY</h1>
 
         <div class="pick-area">
           <form name="track-input" id="track-input">
             <label for="track-url">Enter a SoundCloud URL</label>
             <input class="u-full-width" type="url" required="required" placeholder="soundcloud.com/cool-artist/amazing-song" id="track-url">
-            <input class="button" type="submit" value="Make some noise">         
+            <input class="button" type="submit" value="Make some noise">
           </form>
 
           <hr>
@@ -211,7 +116,7 @@
         <div class="play-area">
           <i class="fa fa-circle-o-notch fa-spin player"></i>
           <h5><a href="#" class="title"></a> <em>by</em> <a href="#" class="user"></a></h5>
-          
+
           <hr>
 
           <div class="social">
@@ -269,7 +174,7 @@ player.on('playing', function(audio) {
 // Error handling
 player.on('error', function(audio) {
   try {
-      playNext(); 
+      playNext();
   } catch (e) {
       alert("We're having trouble streaming that track... please try a different one");
       trackSelect();
@@ -379,7 +284,7 @@ function loadSuggestions(id) {
     // Concat new tracks and resubmit to localStorage
     localStorage['playlist'] = JSON.stringify(playlist.concat(tracks));
 
-}); 
+});
 
 }
 
@@ -449,7 +354,7 @@ function playNext() {
 
 // Grab next song and start playing on song end
 player.on('ended', function(audio) {
-    playNext();  
+    playNext();
 });
 
 function updateSocial(url) {
