@@ -42,6 +42,10 @@ input[type="submit"]:hover {
   color: #E67E22;
 }
 
+.fa-github:hover {
+  color: #4183c4;
+}
+
 .tips {
   display: none;
 }
