@@ -4,6 +4,12 @@
   margin-top: 2rem;
 }
 
+input[type="submit"]:hover {
+  color: #FFF;
+  background: #212121;
+  border: 1px solid #212121;
+}
+
 .player {
   font-size: 72px;
   margin-bottom: 1rem;
