@@ -10,7 +10,7 @@ input[type="submit"]:hover {
   border: 1px solid #212121;
 }
 
-.player {
+.fa.player {
   font-size: 72px;
   margin-bottom: 1rem;
   cursor: pointer;
