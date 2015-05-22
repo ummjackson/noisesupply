@@ -20,6 +20,17 @@ input[type="submit"]:hover {
   display: none;
 }
 
+.volume {
+  color: #999;
+  font-size: 12px;
+  position: fixed;
+  bottom: 12px;
+  left: 12px;
+  cursor: pointer;
+  background-color: #FFF;
+  display: none;
+}
+
 .credits {
   color: #999;
   font-size: 12px;

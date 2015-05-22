@@ -95,6 +95,12 @@ $(window).keydown(function(e) {
     else if (e.which === 39) {
       playNext();
     }
+    else if (e.which === 38) {
+      volumeUp();
+    }
+    else if (e.which === 40) {
+      volumeDown();
+    }
 });
 
 function loadSuggestions(id) {
@@ -244,6 +250,26 @@ function loadGenre(genre) {
     trackPlay(data[0].permalink_url);
   });
 
+}
+
+// Volume goes up
+function volumeUp() {
+if (player.audio.volume < 1) {
+  newVolume = player.audio.volume + 0.05;
+  player.audio.volume = parseFloat(newVolume.toFixed(2));
+  
+  $('.volume').text(Math.round(player.audio.volume * 100)).removeClass('fadeOutDown fadeOutUp').show().addClass('fadeOutUp');
+ }
+}
+
+// Volume goes down
+function volumeDown() {
+if (player.audio.volume > 0) { 
+  newVolume = player.audio.volume - 0.05;
+  player.audio.volume = parseFloat(newVolume.toFixed(2));
+
+  $('.volume').text(Math.round(player.audio.volume * 100)).removeClass('fadeOutDown fadeOutUp').show().addClass('fadeOutDown');
+ }
 }
 
   // IE origin workaround
