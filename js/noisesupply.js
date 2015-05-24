@@ -1,6 +1,9 @@
 // Load everything...
 Zepto(function($){
 
+// Mobile check
+var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
 // Create instance with token
 var player = new SoundCloudAudio('b386da1a67a067584cac1747c49ef3d7');
 
@@ -20,6 +23,11 @@ player.on('playing', function(audio) {
     $('.player').addClass('fa-pause');
 });
 
+// Grab next song and start playing on song end
+player.on('ended', function(audio) {
+    playNext();
+});
+
 // Error handling
 player.on('error', function(audio) {
   try {
@@ -32,9 +40,20 @@ player.on('error', function(audio) {
 
 // Play / pause button click handling
 $('.player').on('click', function(e) {
+
+    // Player looks paused, go to play
     if (!player.playing) {
         player.play();
-    } else {
+      }
+
+    // iOS touch interaction workaround  
+    else if (isMobile && !window.touchInitiated) {
+      player.play();
+      window.touchInitiated = 'true';
+      } 
+
+    // Player is playing, go to pause
+    else {
         player.pause();
     }
 });
@@ -207,11 +226,6 @@ function playNext() {
   playTrack(url);
 }
 
-// Grab next song and start playing on song end
-player.on('ended', function(audio) {
-    playNext();
-});
-
 function updateSocial(url) {
 
   $('.twitter').attr('href', 'https://twitter.com/intent/tweet?text=Currently listening on @noisedotsuppply :: ' + encodeURIComponent(url));
@@ -283,6 +297,12 @@ if (player.audio.volume > 0) {
     trackPlay(url);
   } else {
     trackSelect();
+  }
+
+  if (isMobile) {
+    $('.credits').hide();
+    $('.player').removeClass('fa-pause fa-circle-o-notch fa-spin');
+    $('.player').addClass('fa-play');
   }
 
 });
