@@ -71,6 +71,7 @@ function trackPlay(url) {
       $('#track-url').val('');
       $('.pick-area').hide();
       $('.play-area').show();
+      document.title = 'NOISESUPPLY - "' + track.title + '" by ' + track.user.username;
       localStorage.clear();
       window.location.hash = '#' + track.permalink_url;
       updateSocial(window.location.origin + '/#' + track.permalink_url);
