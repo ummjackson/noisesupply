@@ -223,7 +223,7 @@ function playTrack(url) {
               $('.user').attr('href', track.user.permalink_url).text(track.user.username);
 
               if (localStorage.oauth) {
-              $('.favorite').removeClass('favorited').show();
+              $('.favorite').removeClass('favorited tada').show();
               }
 
               else { $('.favorite').hide(); }
@@ -342,11 +342,17 @@ if (player.audio.volume > 0) {
 function favoriteCurrent() {
 // If current track isn't favorited already, do the AJAX call
 if (!$('.favorite').hasClass('favorited') && localStorage.oauth) {
+
+$('.favorite').addClass('favorited tada');
+
   $.ajax({
   url: 'https://api.soundcloud.com/users/' + localStorage.userid + '/favorites/' + player._track.id + '?oauth_token='+localStorage.oauth,
   type: 'PUT',
   success: function(data) {
-    $('.favorite').addClass('favorited');
+    
+  },
+  error: function(data) {
+    $('.favorite').removeClass('favorited tada');
   }
   });
 }

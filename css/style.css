@@ -45,10 +45,6 @@ input[type="submit"]:hover {
   color: #999;
 }
 
-.fa-heart:hover {
-  color: #E74C3C;
-}
-
 .fa-soundcloud:hover {
   color: #E67E22;
 }
@@ -142,8 +138,9 @@ hr {
 
 .favorite:hover {
   cursor: pointer;
+  color: #E74C3C;
 }
 
 .favorited {
-  color: #000;
+  color: #E74C3C;
 }
