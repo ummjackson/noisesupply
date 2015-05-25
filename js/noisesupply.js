@@ -28,16 +28,6 @@ player.on('ended', function(audio) {
     playNext();
 });
 
-// Error handling
-player.on('error', function(audio) {
-  try {
-      playNext();
-  } catch (e) {
-      alert("We're having trouble streaming that track... please try a different one");
-      trackSelect();
-  }
-});
-
 // Play / pause button click handling
 $('.player').on('click', function(e) {
 
@@ -182,6 +172,9 @@ function playTrack(url) {
           localStorage['history'] = JSON.stringify(playhistory);
         }
 
+        // Load suggestions into playlist (even if the track doesn't stream, because there could still be recommendations)
+        loadSuggestions(track.id);
+
         // Get around SounCloud saying stuff is streamable when it's not by using an undocumented API endpoint...
         $.getJSON('https://api.soundcloud.com/tracks/' + track.id + '/streams?client_id=b386da1a67a067584cac1747c49ef3d7',
           function(data) {
@@ -204,14 +197,14 @@ function playTrack(url) {
 
           });
 
-        // Load suggestions into playlist (even if the track didn't stream, because there could still be recommendations)
-        loadSuggestions(track.id);
-
     });
 
 }
 
 function playNext() {
+
+  if (localStorage['playlist']) {
+
   // Load the playlist from localStorage
   playlist = JSON.parse(localStorage['playlist']);
 
@@ -224,7 +217,25 @@ function playNext() {
 
   // Play the track
   playTrack(url);
+  }
+
+  else {
+    setTimeout(function() {
+            playNext();
+        }, 1000);
+  }
+
 }
+
+// Error handling
+player.on('error', function(audio) {
+  if (!player.playing) {
+        playNext();
+  }
+  else {
+    player.play();
+  }
+});
 
 function updateSocial(url) {
 
