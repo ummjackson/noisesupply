@@ -48,6 +48,11 @@ $('.player').on('click', function(e) {
     }
 });
 
+// Favorite current track click
+$('.favorite').on('click', function(e) {
+  favoriteCurrent();
+});
+
 // Submit button click handling
 $('#track-input').on('submit', function(e) {
     e.preventDefault();
@@ -58,7 +63,7 @@ $('#track-input').on('submit', function(e) {
     trackPlay(url);
     }
 
-    // Player user favorite
+    // Play user favorite
     else {
 
       $.getJSON('https://api.soundcloud.com/users/' + url + '/favorites?client_id=b386da1a67a067584cac1747c49ef3d7',
@@ -99,7 +104,7 @@ function trackPlay(url) {
       $('.pick-area').hide();
       $('.play-area').show();
       document.title = 'NOISESUPPLY - "' + track.title + '" by ' + track.user.username;
-      localStorage.clear();
+      sessionStorage.clear();
       window.location.hash = '#' + track.permalink_url;
       updateSocial(window.location.origin + '/#' + track.permalink_url);
       playTrack(track.permalink_url);
@@ -138,6 +143,9 @@ $(window).keydown(function(e) {
     else if (e.which === 40) {
       volumeDown();
     }
+    else if (e.which === 70) {
+      favoriteCurrent();
+    }
 });
 
 function loadSuggestions(id) {
@@ -146,8 +154,8 @@ function loadSuggestions(id) {
   $.getJSON('https://api.soundcloud.com/tracks/' + id + '/related?limit=25', function(data){
 
     // Get playlist
-    if (localStorage['playlist']) {
-    playlist = JSON.parse(localStorage['playlist']);
+    if (sessionStorage['playlist']) {
+    playlist = JSON.parse(sessionStorage['playlist']);
     }
 
     else {
@@ -155,7 +163,7 @@ function loadSuggestions(id) {
     }
 
     // Get play history
-    playhistory = JSON.parse(localStorage['history']);
+    playhistory = JSON.parse(sessionStorage['history']);
 
     // Empty tracks array
     tracks = [];
@@ -173,8 +181,8 @@ function loadSuggestions(id) {
 
     });
 
-    // Concat new tracks and resubmit to localStorage
-    localStorage['playlist'] = JSON.stringify(playlist.concat(tracks));
+    // Concat new tracks and resubmit to sessionStorage
+    sessionStorage['playlist'] = JSON.stringify(playlist.concat(tracks));
 
 });
 
@@ -188,16 +196,16 @@ function playTrack(url) {
         track.permalink_url = track.permalink_url.replace(/^http:\/\//i, 'https://');
 
         // Add to player history
-        if (localStorage['history']) {
-          playhistory = JSON.parse(localStorage['history']);
+        if (sessionStorage['history']) {
+          playhistory = JSON.parse(sessionStorage['history']);
           playhistory.push(track.permalink_url);
-          localStorage['history'] = JSON.stringify(playhistory);
+          sessionStorage['history'] = JSON.stringify(playhistory);
         }
 
         else {
           playhistory = [];
           playhistory.push(track.permalink_url);
-          localStorage['history'] = JSON.stringify(playhistory);
+          sessionStorage['history'] = JSON.stringify(playhistory);
         }
 
         // Load suggestions into playlist (even if the track doesn't stream, because there could still be recommendations)
@@ -213,6 +221,12 @@ function playTrack(url) {
               // Update UI
               $('.title').attr('href', track.permalink_url).text(track.title);
               $('.user').attr('href', track.user.permalink_url).text(track.user.username);
+
+              if (localStorage.oauth) {
+              $('.favorite').removeClass('favorited').show();
+              }
+
+              else { $('.favorite').hide(); }
 
               // Play the track
               player.play();
@@ -231,17 +245,17 @@ function playTrack(url) {
 
 function playNext() {
 
-  if (localStorage['playlist']) {
+  if (sessionStorage['playlist']) {
 
-  // Load the playlist from localStorage
-  playlist = JSON.parse(localStorage['playlist']);
+  // Load the playlist from sessionStorage
+  playlist = JSON.parse(sessionStorage['playlist']);
 
   // Grab the track to play
   url = playlist[0];
 
-  // Remove the first track and save back to localStorage
+  // Remove the first track and save back to sessionStorage
   playlist.shift();
-  localStorage['playlist'] = JSON.stringify(playlist);
+  sessionStorage['playlist'] = JSON.stringify(playlist);
 
   // Play the track
   playTrack(url);
@@ -325,6 +339,19 @@ if (player.audio.volume > 0) {
  }
 }
 
+function favoriteCurrent() {
+// If current track isn't favorited already, do the AJAX call
+if (!$('.favorite').hasClass('favorited')) {
+  $.ajax({
+  url: 'https://api.soundcloud.com/users/' + localStorage.userid + '/favorites/' + player._track.id + '?oauth_token='+localStorage.oauth,
+  type: 'PUT',
+  success: function(data) {
+    $('.favorite').addClass('favorited');
+  }
+  });
+}
+}
+
   // IE origin workaround
   if (!window.location.origin) {
     window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
@@ -332,9 +359,31 @@ if (player.audio.volume > 0) {
 
   // Hash handling
   if(window.location.hash) {
+
+    // oAuth token return
+    if (window.location.hash.split('#')[1].indexOf('access') >= 0) {
+      
+    token = window.location.hash.split('#')[1].split('&')[0].split('=')[1];
+
+    $.getJSON('https://api.soundcloud.com/me.json?oauth_token=' + token , function(data){
+      localStorage.oauth = token;
+      localStorage.username = data.username;
+      localStorage.userid = data.id;
+      localStorage.avatar = data.avatar_url;
+      window.location = window.location.origin;
+    });
+
+    }
+
+    // Hashed song playing
+    else if (window.location.hash.split('#')[1].indexOf('http') >= 0) {
     url = window.location.hash.split('#')[1];
     trackPlay(url);
-  } else {
+    }
+
+  } 
+
+  else {
     trackSelect();
   }
 

@@ -134,3 +134,16 @@ hr {
 .selected-genre {
   text-transform: uppercase;
 }
+
+.favorite {
+  display: none;
+  color: #999;
+}
+
+.favorite:hover {
+  cursor: pointer;
+}
+
+.favorited {
+  color: #000;
+}
