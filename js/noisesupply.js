@@ -52,7 +52,34 @@ $('.player').on('click', function(e) {
 $('#track-input').on('submit', function(e) {
     e.preventDefault();
     url = $('#track-url').val();
+
+    // It's just a permalink
+    if (/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/i.test(url)) {
     trackPlay(url);
+    }
+
+    // Player user favorite
+    else {
+
+      $.getJSON('https://api.soundcloud.com/users/' + url + '/favorites?client_id=b386da1a67a067584cac1747c49ef3d7',
+          function(data) { 
+            shuffleArray(data);
+            trackPlay(data[0].permalink_url);      
+      });
+    }
+
+    // Player user upload
+    /*
+    else if (url.indexOf('t ') == 0){
+
+      $.getJSON('https://api.soundcloud.com/users/' + url.slice(2) + '/tracks?client_id=b386da1a67a067584cac1747c49ef3d7',
+          function(data) { 
+            shuffleArray(data);
+            trackPlay(data[0].permalink_url);      
+      });
+    }
+    */
+
 });
 
 // Genre clicking
