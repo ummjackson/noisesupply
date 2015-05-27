@@ -109,7 +109,7 @@ function trackPlay(url) {
       updateSocial(window.location.origin + '/#' + track.permalink_url);
       playTrack(track.permalink_url);
 
-        if (document.cookie.indexOf('tips') < 0) {
+        if (!localStorage.tips) {
           $('.tips').show();
         }
 
@@ -154,8 +154,8 @@ function loadSuggestions(id) {
   $.getJSON('https://api.soundcloud.com/tracks/' + id + '/related?limit=25', function(data){
 
     // Get playlist
-    if (sessionStorage['playlist']) {
-    playlist = JSON.parse(sessionStorage['playlist']);
+    if (sessionStorage.playlist) {
+    playlist = JSON.parse(sessionStorage.playlist);
     }
 
     else {
@@ -163,7 +163,7 @@ function loadSuggestions(id) {
     }
 
     // Get play history
-    playhistory = JSON.parse(sessionStorage['history']);
+    playhistory = JSON.parse(sessionStorage.history);
 
     // Empty tracks array
     tracks = [];
@@ -182,7 +182,7 @@ function loadSuggestions(id) {
     });
 
     // Concat new tracks and resubmit to sessionStorage
-    sessionStorage['playlist'] = JSON.stringify(playlist.concat(tracks));
+    sessionStorage.playlist = JSON.stringify(playlist.concat(tracks));
 
 });
 
@@ -196,16 +196,16 @@ function playTrack(url) {
         track.permalink_url = track.permalink_url.replace(/^http:\/\//i, 'https://');
 
         // Add to player history
-        if (sessionStorage['history']) {
-          playhistory = JSON.parse(sessionStorage['history']);
+        if (sessionStorage.history) {
+          playhistory = JSON.parse(sessionStorage.history);
           playhistory.push(track.permalink_url);
-          sessionStorage['history'] = JSON.stringify(playhistory);
+          sessionStorage.history = JSON.stringify(playhistory);
         }
 
         else {
           playhistory = [];
           playhistory.push(track.permalink_url);
-          sessionStorage['history'] = JSON.stringify(playhistory);
+          sessionStorage.history = JSON.stringify(playhistory);
         }
 
         // Load suggestions into playlist (even if the track doesn't stream, because there could still be recommendations)
@@ -245,17 +245,17 @@ function playTrack(url) {
 
 function playNext() {
 
-  if (sessionStorage['playlist']) {
+  if (sessionStorage.playlist) {
 
   // Load the playlist from sessionStorage
-  playlist = JSON.parse(sessionStorage['playlist']);
+  playlist = JSON.parse(sessionStorage.playlist);
 
   // Grab the track to play
   url = playlist[0];
 
   // Remove the first track and save back to sessionStorage
   playlist.shift();
-  sessionStorage['playlist'] = JSON.stringify(playlist);
+  sessionStorage.playlist = JSON.stringify(playlist);
 
   // Play the track
   playTrack(url);
