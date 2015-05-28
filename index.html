@@ -134,7 +134,7 @@
 
         </div>
 
-        <div class="play-area">
+        <div class="play-area animated fadeIn">
           <i class="fa fa-circle-o-notch fa-spin player"></i>
           <h5><a href="#" class="title"></a> <em>by</em> <a href="#" class="user"></a> <i class="fa fa-heart animated favorite"></i></h5>
 
@@ -152,13 +152,24 @@
         </div>
     </div>
 
-    <div class="one-third column">
-<pre class="tips"><code><u>Keyboard shortcuts</u>
-- Spacebar to pause
-- Right arrow to skip track
-- Up/Down arrows to change volume
-<a href="javascript:localStorage.tips = 'true'; $('.tips').hide();void(0);">[Close]</a>
-</code></pre>
+    <div class="one-third column sidebar">
+
+      <div class="sidebox tips">
+      <label>Keyboard shortcuts</label>
+      <ul>
+        <li>Spacebar to pause</li>
+        <li>Right arrow to skip track</li>
+        <li>Up/Down arrows to change volume</li>
+        <a href="javascript:localStorage.tips = 'true'; $('.tips').hide();void(0);">[Close]</a>
+      </ul>
+      </div>
+
+      <div class="sidebox history">
+        <label>Previously...</label>
+        <ul>
+        </ul>
+      </div>
+
     </div>
   </div>
 
@@ -172,6 +183,7 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.6/zepto.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
   <script src="js/soundcloud-audio.min.js"></script>
   <script src="js/noisesupply.js"></script>
 

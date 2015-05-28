@@ -110,9 +110,10 @@ function trackPlay(url) {
       playTrack(track.permalink_url);
 
         if (!localStorage.tips) {
-          $('.tips').show();
+          $('.tips').show().addClass('animated fadeIn');
         }
 
+      $('.history').show().addClass('animated fadeIn');
     }
   });
 }
@@ -195,7 +196,7 @@ function playTrack(url) {
         // Make sure we're using HTTPS for everything
         track.permalink_url = track.permalink_url.replace(/^http:\/\//i, 'https://');
 
-        // Add to player history
+        // Add to player history storage
         if (sessionStorage.history) {
           playhistory = JSON.parse(sessionStorage.history);
           playhistory.push(track.permalink_url);
@@ -230,6 +231,10 @@ function playTrack(url) {
 
               // Play the track
               player.play();
+
+              // Add to player history DOM
+              $('<li class="animated"><span class="timestamp">' + moment().format('h:mmA') + '</span> <a href="' + track.permalink_url + '">' + track.title + '</a> <em>by</em> <a href="' + track.user.permalink_url + '">' + track.user.username + '</a></li>').prependTo('.history ul').addClass('fadeInLeft');
+              $()
             }
 
             // SoundCloud lied, it's not streamable, play the next song

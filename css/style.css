@@ -144,3 +144,36 @@ hr {
 .favorited {
   color: #E74C3C;
 }
+
+.sidebar {
+  padding-top: 2rem;
+}
+
+.sidebox {
+  border: 1px solid #E1E1E1;
+  border-radius: 4px;
+  padding: 1rem 2rem;
+  color: #555;
+  display: none;
+  margin-bottom: 1rem;
+}
+
+.sidebox ul { 
+  font-family: monospace;
+  margin-bottom: 0;
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.sidebox ul li {
+  margin-bottom: 0.5rem;
+}
+
+.history ul li {
+  list-style: none;
+  color: #999;
+}
+
+.history ul li:nth-child(1) {
+  font-weight: bold;
+}
