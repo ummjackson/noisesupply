@@ -406,13 +406,31 @@ $('.favorite').addClass('favorited tada');
 
 });
 
-$('.switch').change(function() {
-  if(this.checked) {
-      $('.day').addClass("dark");
-      $('.fa').addClass("inv");
-  }
-  else {
-      $('.day').removeClass("dark");
-      $('.fa').removeClass("inv");
-  }
+//Night mode
+function toggleMode() {
+    var checked = localStorage.getItem("night");
+    if(checked == null) {
+    }
+    else if(checked == 1) {
+        $('.day').addClass("dark");
+        $('.fa').addClass("inv");
+    }
+    else if(checked == 0){
+        $('.day').removeClass("dark");
+        $('.fa').removeClass("inv");
+    }
+}
+$(function() {
+    //Runs once to check previous state
+    toggleMode();
+    $('.switch').change(function() {
+      if(this.checked) {
+          localStorage.setItem("night", 1);
+          toggleMode();
+      }
+      else {
+          localStorage.setItem("night", 0);
+          toggleMode();
+      }
+    });
 });
