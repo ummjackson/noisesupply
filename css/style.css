@@ -277,6 +277,11 @@ div[class~=dark] {
   background-color: #FFF;
 }
 
+.volume[class~=dark] {
+  color: #FFF;
+  background-color: #000;
+}
+
 i[class~=inv] {
     color: #FFF;
 }
