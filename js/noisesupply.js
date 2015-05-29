@@ -412,10 +412,12 @@ function toggleMode() {
     if(checked == null) {
     }
     else if(checked == 1) {
+        $('.switch').prop('checked', true);
         $('.day').addClass("dark");
         $('.fa').addClass("inv");
     }
     else if(checked == 0){
+        $('.switch').prop('checked', false);
         $('.day').removeClass("dark");
         $('.fa').removeClass("inv");
     }
