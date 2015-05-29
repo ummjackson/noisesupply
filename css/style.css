@@ -179,6 +179,7 @@ hr {
   font-weight: bold;
 }
 
+/* Switch */
 input.switch:empty {
     margin-left: -9999px;
 }
@@ -227,7 +228,7 @@ input.switch:checked ~ label:after {
     background-color: #000;
 }
 
-/* dark */
+/* Dark CSS */
 body[class~=dark] {
   background-color: #000 !important;
   color: #FFF !important;
@@ -267,11 +268,11 @@ div[class~=dark] {
     color: #FFF;
 }
 
-.genres span .dark {
+.genres[class~=dark] {
   color: #D1D1D1;
 }
 
-.genres span:hover {
+.genres[class~=dark] span:hover {
   color: #000;
   background-color: #FFF;
 }
