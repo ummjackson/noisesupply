@@ -405,3 +405,14 @@ $('.favorite').addClass('favorited tada');
   }
 
 });
+
+$('.switch').change(function() {
+  if(this.checked) {
+      $('.day').addClass("dark");
+      $('.fa').addClass("inv");
+  }
+  else {
+      $('.day').removeClass("dark");
+      $('.fa').removeClass("inv");
+  }
+});
