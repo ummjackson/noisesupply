@@ -204,7 +204,7 @@ input.switch:empty ~ label:after {
   bottom: 0;
   left: 0;
   content: ' ';
-  width: 3.6em;
+  width: 3.5em;
   background-color: #000;
   -webkit-transition: all 100ms ease-in;
   transition: all 100ms ease-in;
@@ -215,46 +215,47 @@ input.switch:empty ~ label:after {
 	top: 0.1em;
 	bottom: 0.1em;
 	margin: 0.1em;
-	background-color: #fff;
+	background-color: #FFF;
 }
 
 input.switch:checked ~ label:before {
-	background-color: #D1D1D1;
+	background-color: #FFF;
 }
 
 input.switch:checked ~ label:after {
-	margin-left: 2.1em;
+	margin-left: 2em;
+    background-color: #000;
 }
 
 /* dark */
 body[class~=dark] {
   background-color: #000 !important;
-  color: #fff !imp  ortant;
+  color: #FFF !important;
 }
 
 label[class~=dark] {
-    color: #fff;
+    color: #FFF;
 }
 
 div[class~=dark] {
-    color: #fff;
+    color: #FFF;
 }
 
 .heading[class~=dark] {
-  background-color: #fff;
+  background-color: #FFF;
   color: #000;
 }
 
 .button[class~=dark] {
-  color: #fff;
+  color: #FFF;
   background: #000;
   border: 1px solid #CDCDCD;
 }
 
 .button[class~=dark]:hover {
   color: #000;
-  background: #CDCDCD;
-  border: 1px solid #fff;
+  background: #FFF;
+  border: 1px solid #FFF;
 }
 
 .credits[class~=dark] {
@@ -263,7 +264,7 @@ div[class~=dark] {
 }
 
 .sidebox[class~=dark] {
-    color: #fff;
+    color: #FFF;
 }
 
 .genres span .dark {
@@ -276,5 +277,5 @@ div[class~=dark] {
 }
 
 i[class~=inv] {
-    color: #fff;
+    color: #FFF;
 }
