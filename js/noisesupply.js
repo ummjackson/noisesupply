@@ -286,7 +286,7 @@ player.on('error', function(audio) {
 
 function updateSocial(url) {
 
-  $('.twitter').attr('href', 'https://twitter.com/intent/tweet?text=Currently listening on @noisedotsuppply :: ' + encodeURIComponent(url));
+  $('.twitter').attr('href', 'https://twitter.com/intent/tweet?text=Currently listening on @noisedotsupply :: ' + encodeURIComponent(url));
   $('.facebook').attr('href', 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url));
   $('.tumblr').attr('href','http://www.tumblr.com/share/link?url=' + encodeURIComponent(url) + '&description=Currently listening on noise.supply');
 
