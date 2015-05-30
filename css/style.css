@@ -229,59 +229,63 @@ input.switch:checked ~ label:after {
 }
 
 /* Dark CSS */
-body[class~=dark] {
+body.dark {
   background-color: #000 !important;
   color: #FFF !important;
 }
 
-label[class~=dark] {
+body.dark label {
     color: #FFF;
 }
 
-div[class~=dark] {
+body.dark div {
     color: #FFF;
 }
 
-.heading[class~=dark] {
+body.dark input[type="text"]{
+    color: #888;
+}
+
+body.dark .heading {
   background-color: #FFF;
   color: #000;
 }
 
-.button[class~=dark] {
+body.dark .button {
   color: #FFF;
   background: #000;
   border: 1px solid #CDCDCD;
 }
 
-.button[class~=dark]:hover {
+body.dark .button:hover {
   color: #000;
   background: #FFF;
   border: 1px solid #FFF;
 }
 
-.credits[class~=dark] {
+body.dark .credits {
   color: #999;
   background-color: #000 !important;
 }
 
-.sidebox[class~=dark] {
+body.dark .sidebox {
     color: #FFF;
 }
 
-.genres[class~=dark] {
+body.dark .genres {
   color: #D1D1D1;
 }
 
-.genres[class~=dark] span:hover {
+body.dark .genres span:hover {
   color: #000;
   background-color: #FFF;
 }
 
-.volume[class~=dark] {
+body.dark .volume {
   color: #FFF;
   background-color: #000;
 }
 
-i[class~=inv] {
+body.dark i {
     color: #FFF;
 }
