@@ -185,16 +185,16 @@ input.switch:empty {
 }
 
 input.switch:empty ~ label {
-    position: relative;
-    float: left;
-    line-height: 1.6em;
-	text-indent: 4em;
-	margin: 0.2em 0;
-	cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  position: relative;
+  float: left;
+  line-height: 1.6em;
+  text-indent: 4em;
+  margin: 0.2em 0.1em;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 input.switch:empty ~ label:before,
@@ -209,23 +209,23 @@ input.switch:empty ~ label:after {
   background-color: #000;
   -webkit-transition: all 100ms ease-in;
   transition: all 100ms ease-in;
-}
+  }
 
 input.switch:empty ~ label:after {
-	width: 1.4em;
-	top: 0.1em;
-	bottom: 0.1em;
-	margin: 0.1em;
-	background-color: #FFF;
+  width: 1.4em;
+  top: 0.1em;
+  bottom: 0.1em;
+  margin: 0.1em;
+  background-color: #FFF;
 }
 
 input.switch:checked ~ label:before {
-	background-color: #FFF;
+  background-color: #FFF;
 }
 
 input.switch:checked ~ label:after {
-	margin-left: 2em;
-    background-color: #000;
+  margin-left: 2em;
+  background-color: #000;
 }
 
 /* Dark CSS */
@@ -235,20 +235,24 @@ body.dark {
 }
 
 body.dark label {
-    color: #FFF;
+  color: #FFF;
 }
 
 body.dark div {
-    color: #FFF;
+  color: #FFF;
 }
 
 body.dark input[type="text"]{
-    color: #888;
+  color: #888;
+}
+
+body.dark i {
+  color: #FFF;
 }
 
 body.dark .heading {
-  background-color: #FFF;
-  color: #000;
+background-color: #FFF;
+color: #000;
 }
 
 body.dark .button {
@@ -269,7 +273,7 @@ body.dark .credits {
 }
 
 body.dark .sidebox {
-    color: #FFF;
+  color: #FFF;
 }
 
 body.dark .genres {
@@ -284,8 +288,4 @@ body.dark .genres span:hover {
 body.dark .volume {
   color: #FFF;
   background-color: #000;
-}
-
-body.dark i {
-    color: #FFF;
 }
