@@ -405,3 +405,34 @@ $('.favorite').addClass('favorited tada');
   }
 
 });
+
+//Night mode
+function toggleMode() {
+    var checked = localStorage.getItem("night");
+    if(checked == null) {
+    }
+    else if(checked == 1) {
+      $('.switch').prop('checked', true);
+      $('.day').addClass("dark");
+      $('.fa').addClass("inv");
+    }
+    else if(checked == 0){
+      $('.switch').prop('checked', false);
+      $('.day').removeClass("dark");
+      $('.fa').removeClass("inv");
+    }
+}
+$(function() {
+    //Runs once to check previous state
+    toggleMode();
+    $('.switch').change(function() {
+      if(this.checked) {
+        localStorage.setItem("night", 1);
+        toggleMode();
+      }
+      else {
+        localStorage.setItem("night", 0);
+        toggleMode();
+      }
+    });
+});
