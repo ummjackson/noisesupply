@@ -140,7 +140,7 @@
 
         <div class="play-area animated fadeIn">
           <i class="fa fa-circle-o-notch fa-spin player"></i>
-          <h5><a href="#" class="title"></a> <em>by</em> <a href="#" class="user"></a> <i class="fa fa-heart animated favorite"></i></h5>
+          <h5 class="current"><a href="#" class="title"></a> <em>by</em> <a href="#" class="user"></a> <i class="fa fa-heart animated favorite"></i></h5>
 
           <hr>
 
@@ -154,9 +154,20 @@
          </div>
 
         </div>
+
     </div>
 
     <div class="one-third column sidebar">
+
+      <div class="sidebox settings">
+      <label>Settings</label>
+      <ul>
+        <li><a href="https://soundcloud.com/connect?client_id=b386da1a67a067584cac1747c49ef3d7&redirect_uri=http://noise.supply/&display=popup&response_type=token&scope=non-expiring" class="sc-connect">Connect SoundCloud</a></li>
+        <li><input class="settingHistory" type="checkbox"> Show play history</li>
+        <li><input class="settingNight" type="checkbox"> Night mode</li>
+        <a href="javascript:$('.settings').hide();void(0);">[Close]</a>
+      </ul>
+      </div>
 
       <div class="sidebox tips">
       <label>Keyboard shortcuts</label>
@@ -182,9 +193,11 @@
   </div>
 
   <div class="credits">
-  created by <a href="http://ummjackson.com/">jackson</a> | powered by <a href="https://soundcloud.com/"><i class="fa fa-soundcloud"></i></a> |
+  <a href="javascript:$('.settings').toggle();void(0);">settings</a> | created by <a href="http://ummjackson.com/">jackson</a> | powered by <a href="https://soundcloud.com/"><i class="fa fa-soundcloud"></i></a> |
   contribute on <a href="https://github.com/ummjackson/noisesupply"><i class="fa fa-github"></i></a>
   </div>
+
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.6/zepto.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>

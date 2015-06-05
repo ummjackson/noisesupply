@@ -1,3 +1,15 @@
+* {
+  cursor: default;
+}
+
+a, i {
+  cursor: pointer;
+}
+
+input {
+  cursor: text;
+}
+
 .heading {
   background-color: #000;
   color: #FFF;
@@ -135,12 +147,12 @@ hr {
   text-transform: uppercase;
 }
 
-.favorite {
+.play-area .favorite {
   display: none;
   color: #999;
 }
 
-.favorite:hover {
+.play-area .favorite:hover {
   cursor: pointer;
   color: #E74C3C;
 }
@@ -180,4 +192,46 @@ hr {
 
 .history ul li:nth-child(1) {
   font-weight: bold;
+}
+
+.history .favorite, .reseed {
+  font-size: 0.5rem;
+  display: none;
+}
+
+.history .favorite:hover {
+  cursor: pointer;
+  color: #E74C3C;
+}
+
+.reseed:hover {
+  cursor: pointer;
+  color: #26A65B;
+}
+
+.history ul li:hover .favorite {
+  display: inline;
+}
+
+.history ul li:hover .reseed {
+  display: inline;
+}
+
+.settings ul li {
+  list-style: none;
+  color: #999;
+}
+
+.settings input {
+  cursor: default;
+  margin-bottom: 0;
+}
+
+.connected {
+  color: #FF8800;
+  font-weight: bold;
+}
+
+.connected:hover {
+  color: #FF3300;
 }

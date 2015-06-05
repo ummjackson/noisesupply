@@ -48,11 +48,6 @@ $('.player').on('click', function(e) {
     }
 });
 
-// Favorite current track click
-$('.favorite').on('click', function(e) {
-  favoriteCurrent();
-});
-
 // Submit button click handling
 $('#track-input').on('submit', function(e) {
     e.preventDefault();
@@ -113,7 +108,10 @@ function trackPlay(url) {
           $('.tips').show().addClass('animated fadeIn');
         }
 
-      $('.history').show().addClass('animated fadeIn');
+        if (localStorage.settingHistory) {
+          $('.history').show().addClass('animated fadeIn');
+        }
+
     }
   });
 }
@@ -222,19 +220,14 @@ function playTrack(url) {
               // Update UI
               $('.title').attr('href', track.permalink_url).text(track.title);
               $('.user').attr('href', track.user.permalink_url).text(track.user.username);
-
-              if (localStorage.oauth) {
-              $('.favorite').removeClass('favorited tada').show();
-              }
-
-              else { $('.favorite').hide(); }
-
+              
               // Play the track
               player.play();
 
               // Add to player history DOM
-              $('<li class="animated"><span class="timestamp">' + moment().format('h:mmA') + '</span> <a href="' + track.permalink_url + '">' + track.title + '</a> <em>by</em> <a href="' + track.user.permalink_url + '">' + track.user.username + '</a></li>').prependTo('.history ul').addClass('fadeInLeft');
-              $()
+              $('<li class="animated" data-id="' + track.id + '" data-permalink="' + track.permalink_url + '"><span class="timestamp">' + moment().format('h:mmA') + '</span> <a href="' + track.permalink_url + '">' + track.title + '</a> <em>by</em> <a href="' + track.user.permalink_url + '">' + track.user.username + '</a> <i class="fa fa-heart animated favorite"></i> <i class="fa fa-random animated reseed"></i></li>').prependTo('.history ul').addClass('fadeInLeft');
+              
+              if (!localStorage.oauth) { $('.favorite').hide(); }
             }
 
             // SoundCloud lied, it's not streamable, play the next song
@@ -344,24 +337,54 @@ if (player.audio.volume > 0) {
  }
 }
 
-function favoriteCurrent() {
-// If current track isn't favorited already, do the AJAX call
-if (!$('.favorite').hasClass('favorited') && localStorage.oauth) {
-
-$('.favorite').addClass('favorited tada');
-
+function scFavorite(id) {
   $.ajax({
-  url: 'https://api.soundcloud.com/users/' + localStorage.userid + '/favorites/' + player._track.id + '?oauth_token='+localStorage.oauth,
+  url: 'https://api.soundcloud.com/users/' + localStorage.userid + '/favorites/' + id + '?oauth_token='+localStorage.oauth,
   type: 'PUT',
   success: function(data) {
-    
+    // Better success handling
   },
   error: function(data) {
-    $('.favorite').removeClass('favorited tada');
+    // Better error handling
   }
   });
 }
+
+function favoriteCurrent() {
+
 }
+
+// Reseed buttons
+$(document).on('click', '.reseed', function() {
+    url = $(this).parent().data('permalink');
+    window.location = window.location.origin + '/#' + url;
+    window.location.reload(true);
+});
+
+// Favorite buttons
+$(document).on('click', '.favorite', function() {
+
+if (!$(this).hasClass('favorited') && localStorage.oauth) {
+
+   $(this).addClass('favorited tada');
+   id = $(this).parent().data('id');
+   scFavorite(id);
+
+ }
+
+});
+
+// History setting
+$('.settingHistory').on('click', function() {
+  if ($(this).prop('checked')) {
+    localStorage.settingHistory = 'show';
+    $('.history').show();
+  }
+  else {
+    localStorage.removeItem('settingHistory');
+    $('.history').hide();
+  }
+});
 
   // IE origin workaround
   if (!window.location.origin) {
@@ -402,6 +425,18 @@ $('.favorite').addClass('favorited tada');
     $('.credits').hide();
     $('.player').removeClass('fa-pause fa-circle-o-notch fa-spin');
     $('.player').addClass('fa-play');
+  }
+
+  if (localStorage.oauth) {
+    $('.sc-connect').text('Connected to SoundCloud').attr('href', 'http://soundcloud.com/settings/connections').addClass('connected');
+  }
+
+  if (localStorage.settingHistory) {
+    $('.settingHistory').prop('checked', true);
+  }
+
+  if (localStorage.settingNight) { 
+    $('.settingNight').prop('checked', true);
   }
 
 });
