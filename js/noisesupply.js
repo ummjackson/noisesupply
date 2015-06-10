@@ -7,24 +7,34 @@ var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 // Create instance with token
 var player = new SoundCloudAudio('b386da1a67a067584cac1747c49ef3d7');
 
+// Last.fm Setup
+var lastfm = new LastFM({
+  apiKey    : '2f7d2b3edcfd268ac25f140a335087ef',
+  apiSecret : '848d5f1806838389484013fdea5795af'
+});
+
 // Button icon changing
 player.on('waiting', function(audio) {
     $('.player').removeClass('fa-pause fa-play');
     $('.player').addClass('fa-circle-o-notch fa-spin');
+    if (isMobile) { $('.skip').hide(); }
 });
 
 player.on('pause', function(audio) {
     $('.player').removeClass('fa-pause fa-circle-o-notch fa-spin');
     $('.player').addClass('fa-play');
+    if (isMobile) { $('.skip').show(); }
 });
 
 player.on('playing', function(audio) {
     $('.player').removeClass('fa-play fa-circle-o-notch fa-spin');
     $('.player').addClass('fa-pause');
+    if (isMobile) { $('.skip').show(); }
 });
 
 // Grab next song and start playing on song end
 player.on('ended', function(audio) {
+    scrobbleTrack(player._track);
     playNext();
 });
 
@@ -48,6 +58,11 @@ $('.player').on('click', function(e) {
     }
 });
 
+// Mobile skip button handling
+$('.skip').on('click', function(e) {
+  playNext();
+});
+
 // Submit button click handling
 $('#track-input').on('submit', function(e) {
     e.preventDefault();
@@ -67,18 +82,6 @@ $('#track-input').on('submit', function(e) {
             trackPlay(data[0].permalink_url);      
       });
     }
-
-    // Player user upload
-    /*
-    else if (url.indexOf('t ') == 0){
-
-      $.getJSON('https://api.soundcloud.com/users/' + url.slice(2) + '/tracks?client_id=b386da1a67a067584cac1747c49ef3d7',
-          function(data) { 
-            shuffleArray(data);
-            trackPlay(data[0].permalink_url);      
-      });
-    }
-    */
 
 });
 
@@ -110,6 +113,10 @@ function trackPlay(url) {
 
         if (localStorage.settingHistory) {
           $('.history').show().addClass('animated fadeIn');
+        }
+
+        if (localStorage.volume) {
+          player.audio.volume = localStorage.volume;
         }
 
     }
@@ -227,7 +234,36 @@ function playTrack(url) {
               // Add to player history DOM
               $('<li class="animated" data-id="' + track.id + '" data-permalink="' + track.permalink_url + '"><span class="timestamp">' + moment().format('h:mmA') + '</span> <a href="' + track.permalink_url + '">' + track.title + '</a> <em>by</em> <a href="' + track.user.permalink_url + '">' + track.user.username + '</a> <i class="fa fa-heart animated favorite"></i> <i class="fa fa-random animated reseed"></i></li>').prependTo('.history ul').addClass('fadeInLeft');
               
-              if (!localStorage.oauth) { $('.favorite').hide(); }
+                if (localStorage.oauth) {
+                  $.getJSON('https://api.soundcloud.com/tracks/' + track.id + '.json?client_id=b386da1a67a067584cac1747c49ef3d7&oauth_token=' + localStorage.oauth, function(fav) {
+                      if (fav.user_favorite == true) {
+                        $('li[data-id="' + track.id + '"] .favorite').addClass('favorited');
+                      }
+                  });
+                }
+
+                else { $('.favorite').hide(); }
+
+                if (localStorage.lastfmsession) {
+
+                  // Update now playing
+                  lastfm.track.updateNowPlaying({
+                          artist: track.user.username,
+                          duration: Math.round(player.duration),
+                          track: track.title
+                      },
+                      JSON.parse(localStorage.lastfmsession),
+                      {
+                          success: function(data) {
+                          //  console.log(data);
+                          },
+                          error: function(code, message) {
+                              console.log('Error: ' + code + ' ' + message);
+                          }
+                      });
+
+                }
+            
             }
 
             // SoundCloud lied, it's not streamable, play the next song
@@ -324,6 +360,8 @@ if (player.audio.volume < 1) {
   player.audio.volume = parseFloat(newVolume.toFixed(2));
   
   $('.volume').text(Math.round(player.audio.volume * 100)).removeClass('fadeOutDown fadeOutUp').show().addClass('fadeOutUp');
+
+  localStorage.volume = player.audio.volume;
  }
 }
 
@@ -334,6 +372,8 @@ if (player.audio.volume > 0) {
   player.audio.volume = parseFloat(newVolume.toFixed(2));
 
   $('.volume').text(Math.round(player.audio.volume * 100)).removeClass('fadeOutDown fadeOutUp').show().addClass('fadeOutDown');
+ 
+  localStorage.volume = player.audio.volume;
  }
 }
 
@@ -342,7 +382,8 @@ function scFavorite(id) {
   url: 'https://api.soundcloud.com/users/' + localStorage.userid + '/favorites/' + id + '?oauth_token='+localStorage.oauth,
   type: 'PUT',
   success: function(data) {
-    // Better success handling
+    // Prevent further animation on show/hide
+    $('.tada').removeClass('tada');
   },
   error: function(data) {
     // Better error handling
@@ -352,6 +393,40 @@ function scFavorite(id) {
 
 function favoriteCurrent() {
 
+current = $('.history ul li i').first();
+
+if (!$(current).hasClass('favorited') && localStorage.oauth) {
+
+   $(current).addClass('visible');
+   $(current).addClass('favorited tada');
+   id = $(current).parent().data('id');
+
+   scFavorite(id);
+
+   setTimeout(function () {
+      $(current).removeClass('visible');
+       }, 1500);
+
+ }
+
+}
+
+function scrobbleTrack(track) {
+lastfm.track.scrobble({
+    artist: track.user.username,
+    chosenByUser: 0,
+    timestamp: moment().unix(),
+    track: track.title
+    },
+    JSON.parse(localStorage.lastfmsession),
+    {
+        success: function(data) {
+        // console.log(data);
+        },
+        error: function(code, message) {
+            console.log('Error: ' + code + ' ' + message);
+        }
+    });
 }
 
 // Reseed buttons
@@ -369,7 +444,6 @@ if (!$(this).hasClass('favorited') && localStorage.oauth) {
    $(this).addClass('favorited tada');
    id = $(this).parent().data('id');
    scFavorite(id);
-
  }
 
 });
@@ -378,11 +452,27 @@ if (!$(this).hasClass('favorited') && localStorage.oauth) {
 $('.settingHistory').on('click', function() {
   if ($(this).prop('checked')) {
     localStorage.settingHistory = 'show';
-    $('.history').show();
+    if (player.playing) {
+      $('.history').show();
+    }
   }
   else {
     localStorage.removeItem('settingHistory');
+    if (player.playing) {
     $('.history').hide();
+  }
+  }
+});
+
+// Night mode setting
+$('.settingNight').on('click', function() {
+  if ($(this).prop('checked')) {
+    localStorage.settingNight = 'night';
+    $('body').removeClass('day').addClass('night');
+  }
+  else {
+    localStorage.removeItem('settingNight');
+    $('body').removeClass('night').addClass('day');
   }
 });
 
@@ -394,7 +484,7 @@ $('.settingHistory').on('click', function() {
   // Hash handling
   if(window.location.hash) {
 
-    // oAuth token return
+    // oAuth token return from Soundcloud
     if (window.location.hash.split('#')[1].indexOf('access') >= 0) {
       
     token = window.location.hash.split('#')[1].split('&')[0].split('=')[1];
@@ -415,7 +505,24 @@ $('.settingHistory').on('click', function() {
     trackPlay(url);
     }
 
-  } 
+  }
+
+    // oAuth token return from last.fm
+    else if (location.search.indexOf('token') >= 0) {
+
+      token = location.search.split('=')[1].split('/')[0];
+      
+      lastfm.auth.getSession({token: token}, {
+            success: function(data) {
+                localStorage.lastfmsession = JSON.stringify(data.session);
+                window.location = window.location.origin;
+            },
+            error: function(code, message) {
+                console.log('Last.fm error:' + message);
+            }
+        });
+
+    } 
 
   else {
     trackSelect();
@@ -431,12 +538,17 @@ $('.settingHistory').on('click', function() {
     $('.sc-connect').text('Connected to SoundCloud').attr('href', 'http://soundcloud.com/settings/connections').addClass('connected');
   }
 
+  if (localStorage.lastfmsession) {
+    $('.lastfm-connect').text('Connected to Last.fm').attr('href', 'http://www.last.fm/settings/applications').addClass('connected');
+  }
+
   if (localStorage.settingHistory) {
     $('.settingHistory').prop('checked', true);
   }
 
   if (localStorage.settingNight) { 
     $('.settingNight').prop('checked', true);
+    $('body').removeClass('day').addClass('night');
   }
 
 });

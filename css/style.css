@@ -1,3 +1,5 @@
+/* Default CSS */
+
 * {
   cursor: default;
 }
@@ -30,6 +32,16 @@ input[type="submit"]:hover {
   font-size: 72px;
   margin-bottom: 1rem;
   cursor: pointer;
+  vertical-align: middle;
+}
+
+.fa.skip {
+  font-size: 48px;
+  padding-left: 12px;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  display: none;
+  vertical-align: middle;
 }
 
 .play-area {
@@ -227,11 +239,88 @@ hr {
   margin-bottom: 0;
 }
 
-.connected {
+.sc-connect.connected {
   color: #FF8800;
   font-weight: bold;
+  text-decoration: none;
+}
+
+.lastfm-connect.connected {
+  color: #D51007;
+  font-weight: bold;
+  text-decoration: none;
 }
 
 .connected:hover {
-  color: #FF3300;
+  text-decoration: underline;
+}
+
+.visible {
+  display: inline !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Night CSS, thanks to https://github.com/thinkaliker */
+body.night {
+  background-color: #000 !important;
+  color: #FFF !important;
+}
+
+body.night label {
+  color: #FFF;
+}
+
+body.night div {
+  color: #FFF;
+}
+
+body.night input[type="text"]{
+  color: #888;
+}
+
+body.night i {
+  color: #FFF;
+}
+
+body.night .heading {
+background-color: #FFF;
+color: #000;
+}
+
+body.night .button {
+  color: #FFF;
+  background: #000;
+  border: 1px solid #CDCDCD;
+}
+
+body.night .button:hover {
+  color: #000;
+  background: #FFF;
+  border: 1px solid #FFF;
+}
+
+body.night .credits {
+  color: #999;
+  background-color: #000 !important;
+}
+
+body.night .sidebox {
+  color: #FFF;
+}
+
+body.night .genres {
+  color: #D1D1D1;
+}
+
+body.night .genres span:hover {
+  color: #000;
+  background-color: #FFF;
+}
+
+body.night .volume {
+  color: #FFF;
+  background-color: #000;
 }

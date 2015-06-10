@@ -56,7 +56,7 @@
   </script>
 
 </head>
-<body>
+<body class="day">
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -140,6 +140,7 @@
 
         <div class="play-area animated fadeIn">
           <i class="fa fa-circle-o-notch fa-spin player"></i>
+          <i class="fa fa-step-forward skip"></i>
           <h5 class="current"><a href="#" class="title"></a> <em>by</em> <a href="#" class="user"></a> <i class="fa fa-heart animated favorite"></i></h5>
 
           <hr>
@@ -163,6 +164,7 @@
       <label>Settings</label>
       <ul>
         <li><a href="https://soundcloud.com/connect?client_id=b386da1a67a067584cac1747c49ef3d7&redirect_uri=http://noise.supply/&display=popup&response_type=token&scope=non-expiring" class="sc-connect">Connect SoundCloud</a></li>
+        <li><a href="http://www.last.fm/api/auth?api_key=2f7d2b3edcfd268ac25f140a335087ef&cb=http://noise.supply/" class="lastfm-connect">Connect Last.fm</a></li>
         <li><input class="settingHistory" type="checkbox"> Show play history</li>
         <li><input class="settingNight" type="checkbox"> Night mode</li>
         <a href="javascript:$('.settings').hide();void(0);">[Close]</a>
@@ -197,11 +199,13 @@
   contribute on <a href="https://github.com/ummjackson/noisesupply"><i class="fa fa-github"></i></a>
   </div>
 
-
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.6/zepto.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
   <script src="js/soundcloud-audio.min.js"></script>
+  <script src="js/lastfm.api.md5.js"></script>
+  <script src="js/lastfm.api.js"></script>
   <script src="js/noisesupply.js"></script>
 
 <!-- End Document
