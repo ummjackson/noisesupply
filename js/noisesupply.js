@@ -34,7 +34,7 @@ player.on('playing', function(audio) {
 
 // Grab next song and start playing on song end
 player.on('ended', function(audio) {
-    scrobbleTrack(player._track);
+    if (localStorage.lastfmsession) { scrobbleTrack(player._track); }
     playNext();
 });
 
