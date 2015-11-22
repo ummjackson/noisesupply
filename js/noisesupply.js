@@ -157,7 +157,7 @@ $(window).keydown(function(e) {
 function loadSuggestions(id) {
 
   // Grab suggestions
-  $.getJSON('https://api.soundcloud.com/tracks/' + id + '/related?limit=25', function(data){
+  $.getJSON('https://api.soundcloud.com/tracks/' + id + '/related?limit=25&client_id=b386da1a67a067584cac1747c49ef3d7', function(data){
 
     // Get playlist
     if (sessionStorage.playlist) {
